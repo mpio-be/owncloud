@@ -37,3 +37,7 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+.sublime-project
+.sublime-workspace
+.Rproj.user

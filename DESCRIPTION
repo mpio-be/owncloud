@@ -1,0 +1,19 @@
+Package: owncloud
+Title: A thin wrapper around owncloudcmd
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Mihai",
+           family = "Valcu",
+           role = c("aut", "cre"),
+           email = "valcu@orn.mpg.de" )
+Description: sync data using owncloud. credentials are kept encrypted by the system. 
+Imports:
+    utils
+Depends:
+    R (>= 3.1),
+    getPass
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+SystemRequirements:
+    owncloudcmd, secret-tool 
