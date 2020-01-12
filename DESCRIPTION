@@ -6,14 +6,18 @@ Authors@R:
            family = "Valcu",
            role = c("aut", "cre"),
            email = "valcu@orn.mpg.de" )
-Description: sync data using owncloud. credentials are kept encrypted by the system. 
+Description: owncloud CLI. 
 Imports:
-    utils
+    utils,
+    getPass,
+    glue,
+    magrittr,
+    rprojroot
 Depends:
-    R (>= 3.1),
-    getPass
+    R (>= 3.1)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 SystemRequirements:
     owncloudcmd, secret-tool 
+RoxygenNote: 7.0.2

@@ -1,42 +1,45 @@
 
 
+#' owncloud
+#'
+#' An owncloud client adapted for R. 
+#'
+#' @param dir       oc directory to synchronize, relative to basedir.
+#'                  dir can be missing only if the root directory was synchronized already. 
+#' @param basedir   local directory. default to ~/ownCloud/
+#' @param exclude   files and/or file types to exclude. default to "*.sublime-workspace"
+#'
+#' @return owncloudcmd verbose output returned invisibly. 
+#' 
 #' @export
-owncloud <- function(dir = "path_relative_to_ownCloud", exclude = c("*.sublime-workspace") , dryrun = FALSE, reset = FALSE) {
+#' @importFrom rprojroot  has_file_pattern  find_root
+#' 
+owncloud <- function(dir, basedir = '~/ownCloud/', exclude = c("*.sublime-workspace")  ) {
 
-    cnf = config::get('owncloud')
+    if(missing(dir)) {
+        x = has_file_pattern('\\._sync_.*db$') %>% 
+             find_root 
+        dir     = basename(x)
+        basedir = dirname(x)
+    }
 
-    locDir = str_glue('~/ownCloud/{dir}')
-    system(str_glue('mkdir -p {locDir}'))
+    cnf = getocini()
+
+    glue('mkdir -p {basedir}/{dir}') %>% 
+        system
     
-
     # make exclude file
-    exf = '~/.owncloud_exclude.lst'
+    exf = paste0(system('echo $HOME', intern=TRUE), '/.config/owncloudcmd/.owncloud_exclude.lst') 
     writeLines(exclude, exf)
     
-
-    # cmd
-    if(reset) rm(.__owncloudcmd__, envir = .GlobalEnv)
-
-    cmd = get0('.__owncloudcmd__', envir = .GlobalEnv)
-
-    if(is.null(cmd) ) {
-        cmd = str_glue(
-            "owncloudcmd  --nonshib --user {cnf$user} --password {shQuote(cnf$pwd)} --exclude {exf} {locDir} https://{cnf$host}/remote.php/nonshib-webdav/{dir}")
-
-        assign('.__owncloudcmd__', cmd, envir = .GlobalEnv)
-        
-
-        }
-
-    cmd = get('.__owncloudcmd__', envir = .GlobalEnv)
-
-
-
-    if(!dryrun)
-        system(cmd)
-
-    if(dryrun)
-        cat(cmd)
+    # run
+    tf = tempfile()
+    cmd = glue("owncloudcmd -h --nonshib --user {cnf['user']} --password {shQuote(cnf['pwd'])} --exclude {exf} \\
+        {basedir}/{dir} https://{cnf['url']}/remote.php/nonshib-webdav/{dir} > {tf} 2>&1 ")
+    
+    system(cmd)
+    
+    invisible(readLines(tf))
 
 
 }
