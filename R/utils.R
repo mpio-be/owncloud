@@ -46,7 +46,7 @@ ocini <- function(url, user, pwd){
 
 getocini <- function() {
     path = paste0(system('echo $HOME', intern=TRUE), '/.config/owncloudcmd/.oc.cnf')
-    if(file.exists(path))
+    if(!file.exists(path))
         stop('owncloud was not initialized. Run ocini() first.')
     x = readLines(path)
 
