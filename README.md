@@ -9,3 +9,6 @@ A thin wrapper around owncloudcmd.
 You can run `owncloud()` any time but you'd probably want to have it at
 the end of your script especially after any time consuming operation. 
 
+Install with:
+
+`r remotes::install_github('mpio-be/owncloud')`
