@@ -11,4 +11,4 @@ the end of your script especially after any time consuming operation.
 
 Install with:
 
-`r remotes::install_github('mpio-be/owncloud')`
+`remotes::install_github('mpio-be/owncloud')`
