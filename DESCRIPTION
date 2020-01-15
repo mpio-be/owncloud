@@ -1,6 +1,6 @@
 Package: owncloud
 Title: A thin wrapper around owncloudcmd
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Mihai",
            family = "Valcu",
@@ -12,7 +12,8 @@ Imports:
     getPass,
     glue,
     magrittr,
-    rprojroot
+    rprojroot,
+    cyphr
 Depends:
     R (>= 3.1)
 License: GPL-2
