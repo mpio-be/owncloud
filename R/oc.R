@@ -16,12 +16,6 @@
 #' 
 owncloud <- function(dir, basedir = '~/ownCloud/', exclude = c("*.sublime-workspace")  ) {
 
-    if(missing(dir)) {
-        x = has_file_pattern('\\._sync_.*db$') %>% 
-             find_root 
-        dir     = basename(x)
-        basedir = dirname(x)
-    }
 
     cnf = getocini()
 

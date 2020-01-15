@@ -11,8 +11,7 @@ Imports:
     utils,
     getPass,
     glue,
-    magrittr,
-    rprojroot
+    magrittr
 Depends:
     R (>= 3.1)
 License: GPL-2
