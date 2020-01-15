@@ -12,8 +12,7 @@ Imports:
     getPass,
     glue,
     magrittr,
-    rprojroot,
-    cyphr
+    rprojroot
 Depends:
     R (>= 3.1)
 License: GPL-2

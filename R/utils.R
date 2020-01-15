@@ -1,5 +1,5 @@
 
-#' store owncloud credentials
+#' store owncloud url and username
 #'
 #' @param url  owncloud url
 #' @param user user-name (often this is the user email)
@@ -12,9 +12,8 @@
 #' @export
 #' @importFrom glue     glue
 #' @importFrom magrittr "%>%"
-#' @importFrom sodium   keygen
-#' @importFrom cyphr    key_sodium  encrypt_string decrypt_string
 #' @importFrom stringr  str_remove
+#' @importFrom getPass  getPass
 #'
 ocini <- function(url, user, pwd){
     stopifnot(Sys.info()['sysname'] == 'Linux')
@@ -32,19 +31,11 @@ ocini <- function(url, user, pwd){
         user = readline()
         }
 
-    if(missing(pwd)) {
-        pwd = getPass::getPass("Enter your owncloud password\n(password will be stored encrypted):")
-    }
-
-    saveRDS(keygen() %>% key_sodium, paste0(path, '.k'))
-
-     pwd = encrypt_string(pwd, readRDS(paste0(path, '.k'))) %>% as.character
-     
    
     # store 
     dirname(path) %>%  
     dir.create(showWarnings = FALSE, recursive = TRUE)
-    writeLines(c(url, user, pwd), path)
+    writeLines(c(url, user), path)
     
 
     }
@@ -57,12 +48,16 @@ getocini <- function() {
 
     url  = x[1]
     user = x[2]
-    pwd  = x[3:length(x)] %>% 
-          as.hexmode %>% 
-          as.raw %>% 
-          decrypt_string(key = readRDS(paste0(path, '.k')) )
+    
+    if (! exists('.__ocpwd__') ) {
+        message("Enter your owncloud password")
+        message("[the password is only stored during the current session]")
+        x = getPass()
+        assign('.__ocpwd__', x, envir = .GlobalEnv)
+        }
 
-    o = c(url, user, pwd)
+
+    o = c(url, user, .__ocpwd__)
     names(o) = c('url', 'user', 'pwd')
     o
 

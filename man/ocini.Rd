@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{ocini}
 \alias{ocini}
-\title{store owncloud credentials}
+\title{store owncloud url and username}
 \usage{
 ocini(url, user, pwd)
 }
@@ -14,7 +14,7 @@ ocini(url, user, pwd)
 \item{pwd}{user-password}
 }
 \description{
-store owncloud credentials
+store owncloud url and username
 }
 \author{
 valcu@orn.mpg.de, \email{valcu@orn.mpg.de}
