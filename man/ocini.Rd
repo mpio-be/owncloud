@@ -7,13 +7,14 @@
 ocini(url, user, pwd)
 }
 \arguments{
+\item{url}{owncloud url}
+
 \item{user}{user-name (often this is the user email)}
 
 \item{pwd}{user-password}
 }
 \description{
-The password is stored encrypted using 
-\href{http://manpages.ubuntu.com/manpages/bionic/man1/secret-tool.1.html}{secret-tool}.
+store owncloud credentials
 }
 \author{
 valcu@orn.mpg.de, \email{valcu@orn.mpg.de}

@@ -2,7 +2,12 @@
 
 export(ocini)
 export(owncloud)
+importFrom(cyphr,decrypt_string)
+importFrom(cyphr,encrypt_string)
+importFrom(cyphr,key_sodium)
 importFrom(glue,glue)
 importFrom(magrittr,"%>%")
 importFrom(rprojroot,find_root)
 importFrom(rprojroot,has_file_pattern)
+importFrom(sodium,keygen)
+importFrom(stringr,str_remove)

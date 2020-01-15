@@ -1,9 +1,7 @@
 
 #' store owncloud credentials
 #'
-#' The password is stored encrypted using 
-#' \href{http://manpages.ubuntu.com/manpages/bionic/man1/secret-tool.1.html}{secret-tool}.
-#'
+#' @param url  owncloud url
 #' @param user user-name (often this is the user email)
 #' @param pwd  user-password
 #'
@@ -14,14 +12,19 @@
 #' @export
 #' @importFrom glue     glue
 #' @importFrom magrittr "%>%"
+#' @importFrom sodium   keygen
+#' @importFrom cyphr    key_sodium  encrypt_string decrypt_string
+#' @importFrom stringr  str_remove
 #'
 ocini <- function(url, user, pwd){
     stopifnot(Sys.info()['sysname'] == 'Linux')
     path = paste0(system('echo $HOME', intern=TRUE), '/.config/owncloudcmd/.oc.cnf')
     
     if(missing(url)) {
-        message("Enter your owncloud url:", appendLF = FALSE)
+        message("\nEnter your owncloud url:", appendLF = FALSE)
         url = readline()
+        url = str_remove(url, 'https://')
+
         }
     
     if(missing(user)) {
@@ -29,20 +32,22 @@ ocini <- function(url, user, pwd){
         user = readline()
         }
 
-    if(missing(pwd)) 
+    if(missing(pwd)) {
         pwd = getPass::getPass("Enter your owncloud password\n(password will be stored encrypted):")
-    
-    # store password
-    glue('printf "{pwd}" | secret-tool store --label="owncloud" {url} {user}') %>%
-    system
-
-    # store url & username
-    dirname(path) %>%  
-    dir.create(showWarnings = FALSE, recursive = TRUE)
-    writeLines(c(url, user), path)
-    
     }
 
+    saveRDS(keygen() %>% key_sodium, paste0(path, '.k'))
+
+     pwd = encrypt_string(pwd, readRDS(paste0(path, '.k'))) %>% as.character
+     
+   
+    # store 
+    dirname(path) %>%  
+    dir.create(showWarnings = FALSE, recursive = TRUE)
+    writeLines(c(url, user, pwd), path)
+    
+
+    }
 
 getocini <- function() {
     path = paste0(system('echo $HOME', intern=TRUE), '/.config/owncloudcmd/.oc.cnf')
@@ -50,10 +55,16 @@ getocini <- function() {
         stop('owncloud was not initialized. Run ocini() first.')
     x = readLines(path)
 
-    pwd = glue('secret-tool lookup {x[1]} {x[2]}') %>%
-          system(intern  = TRUE)
-    o = c(x, pwd)
+    url  = x[1]
+    user = x[2]
+    pwd  = x[3:length(x)] %>% 
+          as.hexmode %>% 
+          as.raw %>% 
+          decrypt_string(key = readRDS(paste0(path, '.k')) )
+
+    o = c(url, user, pwd)
     names(o) = c('url', 'user', 'pwd')
     o
 
     }
+
