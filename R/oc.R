@@ -7,14 +7,14 @@
 #' @param dir       oc directory to synchronize, relative to basedir.
 #'                  dir can be missing only if the root directory was synchronized already. 
 #' @param basedir   local directory. default to ~/ownCloud/
-#' @param exclude   files and/or file types to exclude. default to "*.sublime-workspace"
+#' @param exclude   files and/or file types to exclude. default to  c("*.sublime-workspace", ".Rproj.user")
 #'
 #' @return owncloudcmd verbose output returned invisibly. 
 #' 
 #' @export
 #' @importFrom rprojroot  has_file_pattern  find_root
 #' 
-owncloud <- function(dir, basedir = '~/ownCloud/', exclude = c("*.sublime-workspace")  ) {
+owncloud <- function(dir, basedir = '~/ownCloud/', exclude = c("*.sublime-workspace", ".Rproj.user")  ) {
 
 
     cnf = getocini()
